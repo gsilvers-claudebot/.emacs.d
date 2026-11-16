@@ -970,6 +970,35 @@ or holds something that is no longer a command just says so when tapped."
     (setq greg/android-tool-bar-custom-commands
           '(org-tree-slide-move-next-tree org-tree-slide-move-previous-tree))
 
+    ;; ---- Web browsing: EWW first -------------------------------------------
+    ;; Org follows http/https links through `browse-url', as do help buffers
+    ;; and `M-x browse-url', so pointing `browse-url-browser-function' at EWW
+    ;; makes EWW the browser for all of them. That covers both C-c C-o and a
+    ;; tap: touch-screen.el turns a tap on a link into mouse-2, which Org
+    ;; binds to `org-open-at-mouse'. C-u C-c C-o opens the link in a new EWW
+    ;; buffer instead of reusing *eww*.
+    ;;
+    ;; Two things are handed to Android instead. `browse-url-default-android-browser'
+    ;; sends a plain VIEW intent, so Android picks the app:
+    ;;   YouTube links -> PipePipe. Needs Settings > Apps > PipePipe > Open by
+    ;;                    default > "Open supported links", with the YouTube
+    ;;                    links added; without it they open in Vanadium.
+    ;;   `&' in EWW    -> Vanadium, for the pages that need JavaScript.
+    ;;
+    ;; Emacs can't be Android's default browser (its manifest doesn't claim
+    ;; http/https), so links tapped in other apps still open in Vanadium.
+    (defvar greg/youtube-url-regexp
+      "\\`https?://\\([^/]+\\.\\)?\\(youtube\\.com\\|youtu\\.be\\)/"
+      "Matches YouTube links, which go to PipePipe rather than EWW.")
+    (setq browse-url-browser-function #'eww-browse-url
+          browse-url-secondary-browser-function #'browse-url-default-android-browser
+          browse-url-handlers
+          `((,greg/youtube-url-regexp . browse-url-default-android-browser)))
+    ;; Following a link *inside* EWW only goes through `browse-url' (and so
+    ;; the handler above) when the URL matches this; otherwise EWW would try
+    ;; to render YouTube itself.
+    (setq eww-use-browse-url (concat "\\`mailto:\\|" greg/youtube-url-regexp))
+
     ;; ---- Launching other Android apps --------------------------------------
     ;; `android-app-launcher' drives Android's activity manager to start other
     ;; apps; see lisp/android-app-launcher.org for why that is needed and what
