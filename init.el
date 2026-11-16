@@ -971,10 +971,12 @@ or holds something that is no longer a command just says so when tapped."
           '(org-tree-slide-move-next-tree org-tree-slide-move-previous-tree))
 
     ;; ---- Web browsing: EWW first -------------------------------------------
-    ;; Org follows http/https links (C-c C-o) through `browse-url', as do help
-    ;; buffers and `M-x browse-url', so pointing `browse-url-browser-function'
-    ;; at EWW makes EWW the browser for all of them. C-u C-c C-o opens the
-    ;; link in a new EWW buffer instead of reusing *eww*.
+    ;; Org follows http/https links through `browse-url', as do help buffers
+    ;; and `M-x browse-url', so pointing `browse-url-browser-function' at EWW
+    ;; makes EWW the browser for all of them. That covers both C-c C-o and a
+    ;; tap: touch-screen.el turns a tap on a link into mouse-2, which Org
+    ;; binds to `org-open-at-mouse'. C-u C-c C-o opens the link in a new EWW
+    ;; buffer instead of reusing *eww*.
     ;;
     ;; Two things are handed to Android instead. `browse-url-default-android-browser'
     ;; sends a plain VIEW intent, so Android picks the app:
