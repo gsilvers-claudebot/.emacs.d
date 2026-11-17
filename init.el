@@ -374,6 +374,16 @@ approach as the vterm config in the desktop setup)."
     (add-hook 'vterm-mode-hook #'greg/disable_line_numbers)
     (add-hook 'eshell-mode-hook #'greg/disable_line_numbers)
     (add-hook 'eat-mode-hook #'greg/disable_line_numbers)
+
+    ;; EWW: no line numbers, and text wrapped to the window. By default shr
+    ;; hard-fills each paragraph to the window width at the moment the page
+    ;; is drawn, so the text doesn't follow later width changes (rotating the
+    ;; phone, splitting the window, text-scale). With `shr-fill-text' nil it
+    ;; leaves paragraphs as long lines and `visual-line-mode' wraps them,
+    ;; reflowing whenever the width changes.
+    (setq shr-fill-text nil)
+    (add-hook 'eww-mode-hook #'greg/disable_line_numbers)
+    (add-hook 'eww-mode-hook #'visual-line-mode)
    
     (with-eval-after-load 'embark
       (require 'embark-consult))
