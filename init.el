@@ -554,8 +554,19 @@ window whose modeline was clicked to the chosen buffer."
       (display-line-numbers-mode 1)
       (text-scale-set 0))
 
+    ;; Each time org-tree-slide shows a slide it folds the slide's sub-headings
+    ;; down to their titles, so expanding them before the show doesn't help.
+    ;; Unfold them again once the slide is up.
+    (defun greg/slides-show-subtree ()
+      "Show the current slide's sub-headings with their text."
+      (save-excursion
+        (goto-char (point-min))
+        (when (org-at-heading-p)
+          (org-fold-show-subtree))))
+
     (add-hook 'org-tree-slide-play-hook #'greg/slides-on)
     (add-hook 'org-tree-slide-stop-hook #'greg/slides-off)
+    (add-hook 'org-tree-slide-after-narrow-hook #'greg/slides-show-subtree)
 
     ;; SVG editing and preview
     (add-to-list 'auto-mode-alist '("\\.svg\\'" . nxml-mode))
