@@ -761,11 +761,11 @@ things a Linux box can't be assumed to have: zsh and the Nerd Font."
     (global-set-key (kbd "<volume-down>") 'scroll-up-command)
 
     ;; ---- Touch tool bar ----------------------------------------------------
-    ;; One row of fourteen buttons is the whole touch control surface: the
-    ;; modifier bar is off, so this bar is it. Icons come from
-    ;; `material-pbm-icons' because PBM renders on the Android build of Emacs,
-    ;; whereas the stock arrow icons ship only as SVG (unsupported there) and
-    ;; silently show nothing.
+    ;; One row of fourteen buttons (fifteen in Org buffers) is the whole touch
+    ;; control surface: the modifier bar is off, so this bar is it. Icons come
+    ;; from `material-pbm-icons' because PBM renders on the Android build of
+    ;; Emacs, whereas the stock arrow icons ship only as SVG (unsupported there)
+    ;; and silently show nothing.
     ;;
     ;; Three different mechanisms sit behind the buttons:
     ;;   Ctrl, Alt           -> `input-decode-map', reusing the modifier bar's
@@ -792,9 +792,9 @@ things a Linux box can't be assumed to have: zsh and the Nerd Font."
     ;; Touch targets. The pack's glyphs are 24x24 PBMs, but Emacs scales them by
     ;; `image-scaling-factor', so button width is 24*scale + 2*margin + 2*relief.
     ;; At scale 3.2 and horizontal margin 4, the row of 14 needs a
-    ;; `frame-pixel-width' of about 1220. If it wraps, lower the scale from the
-    ;; quick menu or drop the 4. Vertical only changes the height, so raising it
-    ;; is safe.
+    ;; `frame-pixel-width' of about 1220, and Org's row of 15 about 1300. If it
+    ;; wraps, lower the scale from the quick menu (3.0 fits 15 in about 1230) or
+    ;; drop the 4. Vertical only changes the height, so raising it is safe.
     (setq image-scaling-factor 3.2)
     (setq tool-bar-button-margin '(4 . 20))
 
@@ -958,7 +958,11 @@ created on the first save."
         ("numeric-1-circle-outline" greg/android-tool-bar-custom-command-1 slot-1
          :enable (bound-and-true-p org-tree-slide-mode))
         ("numeric-2-circle-outline" greg/android-tool-bar-custom-command-2 slot-2
-         :enable (bound-and-true-p org-tree-slide-mode)))
+         :enable (bound-and-true-p org-tree-slide-mode))
+        ;; C-c C-t: makes the heading a TODO, then cycles TODO -> DONE -> none.
+        ;; Org buffers only, and last, so nothing else shifts when it appears.
+        ("checkbox-marked-outline"  org-todo                  todo
+         :visible (derived-mode-p 'org-mode)))
       "Single-row button list for the Android touch tool bar.")
 
     (setq tool-bar-map (make-sparse-keymap))
